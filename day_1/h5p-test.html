@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Modular H5P Loader</title>
-    <script src="https://unpkg.com/h5p-standalone@1.3.3/dist/main.bundle.js"></script>
+    <title>Fetch H5P File</title>
+    <!-- Add H5P Standalone CSS -->
     <link
+      href="https://cdn.jsdelivr.net/npm/h5p-standalone@3.6.0/dist/main.bundle.css"
       rel="stylesheet"
-      href="https://unpkg.com/h5p-standalone@1.3.3/dist/styles.css"
     />
     <style>
       body {
@@ -16,6 +16,8 @@
       select {
         font-size: 16px;
         padding: 8px;
+        margin: 10px 0;
+        display: inline-block;
       }
       #h5p-container {
         margin-top: 25px;
@@ -31,7 +33,7 @@
     <select id="h5pSelect">
       <option value="">-- Choose File --</option>
       <option
-        value="https://res.cloudinary.com/demo/raw/upload/v1710000000/codebite/h5p/sample1.h5p"
+        value="https://res.cloudinary.com/dhhusebj2/raw/upload/v1745563825/file2_uo03k7.h5p"
       >
         🌩️ Cloudinary - Sample 1
       </option>
@@ -44,15 +46,34 @@
       <p>Select a file to load...</p>
     </div>
 
-    <script type="module">
-      import { renderH5P } from "./h5pRenderer.js";
+    <!-- Add H5P Standalone JS -->
+    <script src="https://cdn.jsdelivr.net/npm/h5p-standalone@3.6.0/dist/main.bundle.js"></script>
+    <script>
+      let h5pInstance = null;
 
       document
         .getElementById("h5pSelect")
         .addEventListener("change", function () {
           const fileUrl = this.value;
+          const container = document.getElementById("h5p-container");
+
+          // Clean up previous instance
+          if (h5pInstance) {
+            h5pInstance = null;
+            container.innerHTML = "";
+          }
+
           if (fileUrl) {
-            renderH5P(fileUrl);
+            // Initialize H5P
+            h5pInstance = H5PStandalone.init(container, {
+              h5pSource: fileUrl,
+              frameJs:
+                "https://cdn.jsdelivr.net/npm/h5p-standalone@3.6.0/dist/frame.bundle.js",
+              frameCss:
+                "https://cdn.jsdelivr.net/npm/h5p-standalone@3.6.0/dist/styles/h5p.css",
+            });
+          } else {
+            container.innerHTML = "<p>Select a file to load...</p>";
           }
         });
     </script>
